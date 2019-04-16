@@ -1,18 +1,64 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button
+            id="qsLoginBtn"
+            class="btn btn-primary btn-margin"
+            v-if="!authenticated"
+            @click="login">
+              Log In
+          </button>
+
+          <button
+            id="qsLogoutBtn"
+            class="btn btn-primary btn-margin"
+            v-if="authenticated"
+            @click="logout">
+              Log Out
+          </button>
+
+        </div>
+      </div>
+    </nav>
+    <DataSetCreator />
+    <DataSets />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import DataSets from './components/DataSets.vue'
+import DataSetCreator from './components/DataSetCreator.vue'
+import auth from './Auth/AuthService'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
-  }
+    DataSets,
+    DataSetCreator
+  },
+  data () {
+    return {
+      auth,
+      authenticated: auth.authenticated
+    }
+  },
+  created () {
+    auth.authNotifier.on('authChange', authState => {
+      this.authenticated = authState.authenticated
+    })
+
+    if (auth.getAuthenticatedFlag() === 'true') {
+      auth.renewSession()
+    }
+
+    auth.handleAuthentication()
+  },
+  methods: {
+    login () { auth.login() },
+    logout () { auth.logout() }
+  },
 }
 </script>
 

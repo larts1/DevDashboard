@@ -1,0 +1,28 @@
+[debug] [2019-03-13T22:40:00.723Z] ----------------------------------------------------------------------
+[debug] [2019-03-13T22:40:00.724Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\lauri\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-03-13T22:40:00.725Z] CLI Version:   6.2.2
+[debug] [2019-03-13T22:40:00.725Z] Platform:      win32
+[debug] [2019-03-13T22:40:00.725Z] Node Version:  v8.15.0
+[debug] [2019-03-13T22:40:00.725Z] Time:          Thu Mar 14 2019 00:40:00 GMT+0200 (FLE Standard Time)
+[debug] [2019-03-13T22:40:00.725Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-03-13T22:40:00.733Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-03-13T22:40:00.733Z] > authorizing via signed-in user
+[debug] [2019-03-13T22:40:00.733Z] [iam] checking project serviceworker-api for permissions ["firebase.projects.get"]
+[debug] [2019-03-13T22:40:00.735Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/serviceworker-api:testIamPermissions  
+
+[debug] [2019-03-13T22:40:01.703Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-13T22:40:01.704Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/serviceworker-api  
+ 
+[debug] [2019-03-13T22:40:02.620Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'D:\Projektit\serviceWorkerAPI'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2019-03-13T22:40:03.147Z] Fetching environment
+[debug] [2019-03-13T22:40:03.150Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/285161532242:getServerAppConfig  
+ 
+[debug] [2019-03-13T22:40:03.810Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-13T22:40:03.811Z] Starting @google-cloud/functions-emulator
+[debug] [2019-03-13T22:40:05.344Z] Parsing function triggers
+[info] +  functions: api: http://localhost:5000/serviceworker-api/us-central1/api
