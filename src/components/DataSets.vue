@@ -33,7 +33,7 @@ export default {
     return {items: []}
   },
   methods: {
-      setVisualizationType(item, type, index) {
+      setVisualizationType(item, type) {
           this.$store.commit("setVisualizationType", { item, type });
       },
       setSize() {
@@ -59,11 +59,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .box {
-       position: absolute;
-       top: 400px; /* Header Height */
-       bottom: 20px; /* Footer Height */
-       width: 100%;
-}
-.element {
+       min-height: 100vh;
 }
 </style>

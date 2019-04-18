@@ -1,29 +1,40 @@
 <template>
-  <div id="app">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button
-            id="qsLoginBtn"
-            class="btn btn-primary btn-margin"
-            v-if="!authenticated"
-            @click="login">
-              Log In
-          </button>
+  <div id="app" class="page-container">
+    <md-app md-mode="reveal" style="min-height: 100vh;">
+    <md-app-toolbar class="md-primary">
+      <md-button class="md-icon-button" @click="showNavigation = true">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <span class="md-title">Dashboard</span>
+    </md-app-toolbar>
 
-          <button
-            id="qsLogoutBtn"
-            class="btn btn-primary btn-margin"
-            v-if="authenticated"
-            @click="logout">
-              Log Out
-          </button>
+    <md-app-drawer :md-active.sync="showNavigation">
+      <md-toolbar class="md-transparent" md-elevation="0">
+        <span class="md-title"> Add datasource</span>
+      </md-toolbar>
 
-        </div>
-      </div>
-    </nav>
-    <DataSetCreator />
-    <DataSets />
+      <md-button
+        id="qsLoginBtn"
+        class="md-raised"
+        v-if="!authenticated"
+        @click="login">
+          Log In
+      </md-button>
+
+      <button
+        id="qsLogoutBtn"
+        class="btn btn-primary btn-margin"
+        v-if="authenticated"
+        @click="logout">
+          Log Out
+      </button>
+
+      <DataSetCreator :hideNavigation="hideNavigation"/>
+    </md-app-drawer>
+    <md-app-content style="min-height: 100vh;">
+      <DataSets />
+    </md-app-content>
+    </md-app>
   </div>
 </template>
 
@@ -41,7 +52,8 @@ export default {
   data () {
     return {
       auth,
-      authenticated: auth.authenticated
+      authenticated: auth.authenticated,
+      showNavigation: false,
     }
   },
   created () {
@@ -57,18 +69,17 @@ export default {
   },
   methods: {
     login () { auth.login() },
-    logout () { auth.logout() }
+    logout () { auth.logout() },
+    hideNavigation() { this.showNavigation = false },
   },
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+.md-app, #app{
+       position: absolute;
+       top: 0px; /* Header Height */
+       bottom: 0px; /* Footer Height */
+       width: 100%;
+    }
 </style>
