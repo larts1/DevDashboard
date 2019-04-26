@@ -35,7 +35,6 @@ const store = new Vuex.Store({
   mutations: {
     setVisualizationType(_state, { type, item}) {
       item.chartType = type;
-      console.log(item);
     },
     setSize(_state, { size, item}) {
       item.chartOptions.width = size.width; 

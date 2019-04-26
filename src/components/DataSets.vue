@@ -1,7 +1,8 @@
 <template>
   <div class="box" @mouseup="setSize()">
-        <vue-draggable-resizable :w="100" :h="100"
-          v-for="(item, index) in dataSets" :key="index"  
+        <vue-draggable-resizable
+          v-for="(item, index) in dataSets" :key="index"
+          :w="item.width" :h="item.height"
           @dragging="onDrag" 
           @resizing="(x, y, width, height) => onResize(x, y, width, height, index, item)"
           :parent="true" 
