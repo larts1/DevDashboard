@@ -6,25 +6,12 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default-dark.css'
 import VueDraggableResizable from 'vue-draggable-resizable'
 import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
-import { 
-  MdButton, 
-  MdContent, 
-  MdTabs, 
-  MdDrawer,
-  MdToolbar,
-  MdIcon,
- } from 'vue-material/dist/components'
- import VueMaterial from 'vue-material'
+import VueMaterial from 'vue-material'
+import worker from './Worker'
 
 Vue.config.productionTip = false;
 
 Vue.use(Vuex);
-Vue.use(MdButton);
-Vue.use(MdContent);
-Vue.use(MdTabs);
-Vue.use(MdDrawer);
-Vue.use(MdToolbar);
-Vue.use(MdIcon);
 Vue.use(VueMaterial);
 Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
@@ -64,6 +51,8 @@ const store = new Vuex.Store({
     }
   }
 });
+
+worker(store);
 
 new Vue({
   store,
