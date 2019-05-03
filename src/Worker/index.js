@@ -9,19 +9,19 @@ function urlBase64ToUint8Array(base64String) {
   }
 
 const worker = async store => {
-  navigator.serviceWorker.register("sw.js")
-  .then(async function(req) {
+  console.log(store);
+  const req = await navigator.serviceWorker.register("sw.js")
+      console.log("ASD");
       try {
-        var subscription = await req.pushManager.getSubscription();
-        if (subscription) return subscription;
-        subscription = await req.pushManager.subscribe({
+        var asd = await req.pushManager.getSubscription();
+        console.log(JSON.stringify(asd), req.pushManager);
+        if (asd) return asd;
+        var subs = await req.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array("BN2zBJXQxH85mxkiJUlMmji0X8ko_qHvg2Wx6vYaKFvkF0sHaqD7vfOwtVTIwk0MlYHMwQJEE4pAP5XfrbxoZGU"),
           });
-        return subscription;
+        console.log(JSON.stringify(subs));
         } catch (e) { console.log(e) }
-    }).catch(e => console.log(e))
-
 };
 
 export default worker;

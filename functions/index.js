@@ -30,7 +30,7 @@ var jwtCheck = jwt({
     algorithms: ['RS256']
 });
 
-app.use(jwtCheck);
+//app.use(jwtCheck);
 app.use(cors({ origin: true }));
 app.use(bodyParser.json());
 

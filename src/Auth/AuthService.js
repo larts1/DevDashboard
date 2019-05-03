@@ -1,6 +1,17 @@
 import auth0 from 'auth0-js'
 import EventEmitter from 'eventemitter3'
+import jwksrsa from 'jwks-rsa'
+var jwt = require('jsonwebtoken');
 
+var jwksClient = jwksrsa({
+    jwksUri: "https://ohsiha.auth0.com/.well-known/jwks.json"
+});
+function getKey(header, callback){
+    jwksClient.getSigningKey(header.kid, function(err, key) {
+      var signingKey = key.publicKey || key.rsaPublicKey;
+      callback(null, signingKey);
+    });
+  }
 class AuthService {
     auth0 = new auth0.WebAuth({
         domain: 'ohsiha.auth0.com',
@@ -10,8 +21,9 @@ class AuthService {
         responseType: 'token id_token',
         scope: 'openid profile email'
     })
-    accessToken
-    idToken
+    accessToken = localStorage.getItem('accessToken')
+    idToken = localStorage.getItem('idToken')
+    sub = this.idToken && jwt.decode(this.idToken, {complete: true}).payload.sub
     expiresAt
     authenticated = this.isAuthenticated()
     authNotifier = new EventEmitter()
@@ -23,7 +35,7 @@ class AuthService {
     handleAuthentication () {
     this.auth0.parseHash((err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult)
+            this.setSession(authResult)
         }
     })
     }
@@ -35,15 +47,20 @@ class AuthService {
 
         this.authNotifier.emit('authChange', { authenticated: true })
 
-        localStorage.setItem('loggedIn', true)
+        localStorage.setItem('loggedIn', true);
+
+        const parsed = jwt.decode(authResult.idToken, {complete: true});
+        this.sub = parsed.payload.sub;
+        localStorage.setItem('idToken', this.idToken);
+        localStorage.setItem('accessToken', this.accessToken);
     }
 
     renewSession () {
         this.auth0.checkSession({}, (err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
-            this.setSession(authResult)
+                this.setSession(authResult)
             } else if (err) {
-            this.logout()
+                this.logout()
             }
         })
     }
@@ -64,7 +81,7 @@ class AuthService {
     }
 
     isAuthenticated () {
-        return new Date().getTime() < this.expiresAt && this.getAuthenticatedFlag() === 'true'
+        return this.getAuthenticatedFlag() === 'true' && this.idToken && this.accessToken
     }
 }
 

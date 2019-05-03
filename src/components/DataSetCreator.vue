@@ -15,14 +15,13 @@
         style="opacity: 0"
       >
 
-      <md-button class="md-raised" @click="createDataFetcher()">Add premade web stats</md-button>
+      <md-button class="md-raised" @click="createDataTimeFetcher()">Fetch time</md-button><br>
+      <md-button class="md-raised" @click="createDataSizeFetcher()">Add premade web stats</md-button>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "DataSetCreator",
   props: ["hideNavigation"],
@@ -46,22 +45,14 @@ export default {
         this.hideNavigation();
       });
     },
-    async createDataFetcher() {
-      const getTime = async () => {
-        var start = Date.now();
-        try {
-          const res = await axios.get("http://127.0.0.1:8080/");
-        } catch (e) {}
-        return Date.now() - start;
-      };
-      const entryFunction = async data =>
-        data.push([
-          new Date(Date.now()).toString().substr(16, 8),
-          await getTime()
-        ]);
+    async createDataTimeFetcher() {
       var data = [["Time", "LoadTime"]];
-      await entryFunction(data);
-      this.$store.dispatch("getDataSet", { data, entryFunction });
+      this.$store.dispatch("getDataSet", { data, entryFunction: 'loadtime' });
+      this.hideNavigation();
+    },
+    async createDataSizeFetcher() {
+      var data = [["Time", "Size"]];
+      this.$store.dispatch("getDataSet", { data, entryFunction: 'size' });
       this.hideNavigation();
     }
   }

@@ -1,85 +1,115 @@
 <template>
   <div id="app" class="page-container">
     <md-app md-mode="reveal" style="min-height: 100vh;">
-    <md-app-toolbar class="md-primary">
-      <md-button class="md-icon-button" @click="showNavigation = true">
-        <md-icon>menu</md-icon>
-      </md-button>
-      <span class="md-title">Dashboard</span>
-    </md-app-toolbar>
+      <md-app-toolbar class="md-primary">
+        <md-button class="md-icon-button" @click="showNavigation = true">
+          <md-icon>menu</md-icon>
+        </md-button>
+        <span class="md-title">Dashboard</span>
+      </md-app-toolbar>
 
-    <md-app-drawer :md-active.sync="showNavigation">
-      <md-toolbar class="md-transparent" md-elevation="0">
-        <span class="md-title"> Add datasource</span>
-      </md-toolbar>
+      <md-app-drawer :md-active.sync="showNavigation">
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <span class="md-title">Account</span>
+        </md-toolbar>
+        
 
-      <md-button
-        id="qsLoginBtn"
-        class="md-raised"
-        v-if="!authenticated"
-        @click="login">
-          Log In
-      </md-button>
+        <md-button id="qsLoginBtn" class="md-raised" v-if="!authenticated" @click="login">Log In</md-button>
 
-      <button
-        id="qsLogoutBtn"
-        class="btn btn-primary btn-margin"
-        v-if="authenticated"
-        @click="logout">
-          Log Out
-      </button>
+        <md-button
+          id="qsLogoutBtn"
+          class="md-raised"
+          v-if="authenticated"
+          @click="logout"
+        >Log Out</md-button>
 
-      <DataSetCreator :hideNavigation="hideNavigation"/>
-    </md-app-drawer>
-    <md-app-content style="min-height: 100vh;">
-      <DataSets />
-    </md-app-content>
+        <md-button
+          id="qsSave"
+          class="md-raised"
+          v-if="authenticated"
+          @click="save"
+        >Save</md-button>
+
+        <md-button
+          id="qsLoad"
+          class="md-raised"
+          v-if="authenticated"
+          @click="load"
+        >Load</md-button>
+
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <span class="md-title">Add new dataset</span>
+        </md-toolbar>
+        <DataSetCreator :hideNavigation="hideNavigation"/>
+      </md-app-drawer>
+      <md-app-content style="min-height: 100vh;">
+        <DataSets/>
+      </md-app-content>
     </md-app>
   </div>
 </template>
 
 <script>
-import DataSets from './components/DataSets.vue'
-import DataSetCreator from './components/DataSetCreator.vue'
-import auth from './Auth/AuthService'
+import DataSets from "./components/DataSets.vue";
+import DataSetCreator from "./components/DataSetCreator.vue";
+import auth from "./Auth/AuthService";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     DataSets,
     DataSetCreator
   },
-  data () {
+  data() {
     return {
       auth,
       authenticated: auth.authenticated,
-      showNavigation: false,
-    }
+      showNavigation: false
+    };
   },
-  created () {
-    auth.authNotifier.on('authChange', authState => {
-      this.authenticated = authState.authenticated
-    })
+  created() {
+    auth.authNotifier.on("authChange", authState => {
+      this.authenticated = authState.authenticated;
+      if (auth.getAuthenticatedFlag() === "true") {
+        this.$store.dispatch("loadFromFirestore", { user: auth.sub });
+        this.showNavigation = false;
+      }
+    });
 
-    if (auth.getAuthenticatedFlag() === 'true') {
-      auth.renewSession()
+    if (auth.getAuthenticatedFlag() === "true") {
+      auth.renewSession();
     }
 
-    auth.handleAuthentication()
+    auth.handleAuthentication();
   },
   methods: {
-    login () { auth.login() },
-    logout () { auth.logout() },
-    hideNavigation() { this.showNavigation = false },
-  },
-}
+    login() {
+      auth.login();
+    },
+    logout() {
+      auth.logout();
+    },
+    hideNavigation() {
+      this.showNavigation = false;
+    },
+    save() {
+      this.$store.dispatch("saveToFirestore", { user: auth.sub });
+    },
+    load() {
+      this.$store.dispatch("loadFromFirestore", { user: auth.sub });
+      this.showNavigation = false;
+    }
+  }
+};
 </script>
 
 <style>
-.md-app, #app{
-       position: absolute;
-       top: 0px; /* Header Height */
-       bottom: 0px; /* Footer Height */
-       width: 100%;
-    }
+@import url('//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
+.md-app,
+#app {
+  position: absolute;
+  top: 0px; /* Header Height */
+  bottom: 0px; /* Footer Height */
+  width: 100%;
+}
 </style>
