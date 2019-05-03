@@ -46,7 +46,7 @@ async function GetStatus(data, options) {
         return res.status;
       } catch (e) { return e.response && e.response.status}
     };
-    const code = (await getStatus()).toString();
+    const code = ((await getStatus()) || "500").toString();
     const currEle = data.find(e => e[0] === code);
     if (currEle === undefined) data.push([code, 1]);
     else data[data.indexOf(currEle)] = [code, currEle[1]+1];

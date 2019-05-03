@@ -57,7 +57,7 @@ export default {
       showDialog: false,
       DialogTitle: "",
       Title: "Dataset",
-      URL: "http://localhost:8080",
+      URL: "https://serviceworker-api.firebaseapp.com/",
       func: () => {}
     };
   },
