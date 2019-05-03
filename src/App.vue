@@ -10,7 +10,7 @@
 
       <md-app-drawer :md-active.sync="showNavigation">
         <md-toolbar class="md-transparent" md-elevation="0">
-          <span class="md-title">Account</span>
+          <span class="md-title">Account {{auth.id && auth.id.name || ''}}</span>
         </md-toolbar>
         
 
@@ -42,7 +42,7 @@
         </md-toolbar>
         <DataSetCreator :hideNavigation="hideNavigation"/>
       </md-app-drawer>
-      <md-app-content style="min-height: 100vh;">
+      <md-app-content style="min-height: 100vh; margin-top: 64px;">
         <DataSets/>
       </md-app-content>
     </md-app>

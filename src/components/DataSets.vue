@@ -1,10 +1,10 @@
 <template>
-  <div class="box" @mouseup="setSize()">
+  <div class="box">
     <vue-draggable-resizable
       v-for="(item, index) in dataSets"
       :key="index"
-      :w="item.chartOptions.width"
-      :h="item.chartOptions.height"
+      :w="parseInt(item.width)"
+      :h="parseInt(item.height)"
       :x="item.x"
       :y="item.y"
       @dragging="(x, y) => onDrag(x, y, index, item)"
@@ -12,10 +12,16 @@
       :parent="true"
       class="element"
     >
-      <h3>{{ item.title }}</h3>
-      <button v-on:click="setVisualizationType(item, 'LineChart')">To Line</button>
-      <button v-on:click="setVisualizationType(item, 'BarChart')">To Bar</button>
-      <GChart :type="item.chartType" :data="item.data" :options="item.chartOptions"/>
+
+        <h3 >
+          {{ item.title }}
+          <md-button v-on:click="deleteItem(item)" style="float:right">delete</md-button>
+        </h3>
+        <button v-on:click="setVisualizationType(item, 'LineChart')">To Line</button>
+        <button v-on:click="setVisualizationType(item, 'BarChart')">To Bar</button>
+        <button v-on:click="setVisualizationType(item, 'PieChart')">To Pie</button>
+
+      <GChart :type="item.chartType" :data="item.data" :options="item.chartOptions"/><br>
     </vue-draggable-resizable>
   </div>
 </template>
@@ -37,27 +43,20 @@ export default {
     setVisualizationType(item, type) {
       this.$store.commit("setVisualizationType", { item, type });
     },
-    setSize() {
-      this.items.forEach(item =>
-        this.$store.commit("setSize", {
-          item: item.item,
-          size: { width: item.width - 50, height: item.height - 80 },
-          x: item.x,
-          y: item.y
-        })
-      );
-    },
     onResize: function(x, y, width, height, index, item) {
-      if (this.items[index] == null) this.items[index] = { item };
-      this.items[index].x = x;
-      this.items[index].y = y;
-      this.items[index].chartOptions.width = width;
-      this.items[index].chartOptions.height = height;
+      item.x = x;
+      item.y = y;
+      item.width = width;
+      item.height = height;
+      item.chartOptions.height = height - 80;
+      item.chartOptions.chartArea.height = height - 80;
     },
     onDrag: function(x, y, index, item) {
-      if (this.items[index] == null) this.items[index] = { item };
-      this.items[index].x = x;
-      this.items[index].y = y;
+      item.x = x;
+      item.y = y;
+    },
+    deleteItem(item) {
+      this.$store.commit("deleteSet", item);
     }
   }
 };

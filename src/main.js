@@ -1,13 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import App from "./App.vue";
-import json from "./assets/Book1.json";
 import "vue-material/dist/vue-material.min.css";
 import "vue-material/dist/theme/default-dark.css";
 import VueDraggableResizable from "vue-draggable-resizable";
 import "vue-draggable-resizable/dist/VueDraggableResizable.css";
 import VueMaterial from "vue-material";
-import worker from "./Worker";
 import * as firebase from "firebase/firebase";
 import { GetData } from "./Fetchers/index";
 import "firebase/firestore";
@@ -28,15 +26,6 @@ Vue.config.productionTip = false;
 Vue.use(Vuex);
 Vue.use(VueMaterial);
 Vue.component("vue-draggable-resizable", VueDraggableResizable);
-async function startSub() {
-  const subscription = await worker(store);
-  db.collection("users")
-    .doc("anon")
-    .set({
-      subscription: subscription.endpoint
-    });
-}
-startSub();
 
 const store = new Vuex.Store({
   state: {
@@ -46,12 +35,11 @@ const store = new Vuex.Store({
     setVisualizationType(_state, { type, item }) {
       item.chartType = type;
     },
-    setSize(_state, { size, item, x, y }) {
-      item.chartOptions.width = size.width;
-      item.chartOptions.height = size.height;
-      item.x = x;
-      item.y = y;
-
+    deleteSet(state, set) {
+      const index = state.dataSets.findIndex(
+        dset => set.id == dset.id && self.x === dset.x
+      );
+      state.dataSets.splice(index, 1);
     }
   },
   actions: {
@@ -59,28 +47,43 @@ const store = new Vuex.Store({
       const i = store.state.dataSets.push({
         id: type.id || 0,
         title: type.title || "Static data set",
-        data: type.data || json,
+        data: type.data || JSON.parse(type.initData).d,
+        initData: type.initData,
         chartType: type.visualizationType || "BarChart",
         entryFunction: type.entryFunction,
+        topBar: false,
         chartOptions: {
-          title: "Load times",
-          subtitle: "Time, LoadTime",
-          height: type.width || 50,
-          width: type.height || 50,
-          backgroundColor: "#424242"
+          height: type.height - 50,
+          width: "98%",
+          backgroundColor: "#424242",
+          legend: type.legend || 'right',
+          chartArea: {
+            width: '98%',
+            height: type.height - 50
+          },
         },
-        x: type.x || 0,
-        y: type.y || 0
+        options: type.options,
+        x: type.x || 50,
+        y: type.y || 150,
+        height: type.width || "100",
+        width: type.height || "100",
       });
       setInterval(
         () =>
           type.entryFunction &&
-          GetData(type.entryFunction, store.state.dataSets[i - 1].data),
+          GetData(
+            type.entryFunction,
+            store.state.dataSets[i - 1].data,
+            JSON.parse(store.state.dataSets[i - 1].options)
+          ),
         5000
       );
     },
     async saveToFirestore(context, { user }) {
-      var db = firebase.firestore();
+      (await db
+        .collection("datasets")
+        .where("user", "==", user)
+        .get()).forEach(set => set.ref.delete());
       store.state.dataSets.forEach(async set => {
         if (set.id == 0) {
           const ref = await db.collection("datasets").add({
@@ -88,9 +91,12 @@ const store = new Vuex.Store({
             x: set.x,
             y: set.y,
             user: user || "anon",
-            width: set.chartOptions.width,
-            height: set.chartOptions.height,
+            width: set.width,
+            height: set.height,
             chartType: set.chartType,
+            options: set.options,
+            initData: set.initData,
+            legend: set.legend,
             entryFunction: set.entryFunction || false
           });
           set.id = ref.id;
@@ -103,9 +109,11 @@ const store = new Vuex.Store({
               x: set.x,
               y: set.y,
               user: user || "anon",
-              width: set.chartOptions.width,
-              height: set.chartOptions.height,
+              width: set.width,
+              height: set.height,
               chartType: set.chartType,
+              options: set.options,
+              legend: set.legend,
               entryFunction: set.entryFunction || false
             });
         }
@@ -121,7 +129,6 @@ const store = new Vuex.Store({
       sets.forEach(set => {
         const data = set.data();
         context.dispatch("getDataSet", {
-          entryFunction: eval(data.entryFunction),
           id: set.id,
           ...data
         });
