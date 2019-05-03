@@ -12,7 +12,7 @@ Demo scene available at `https://serviceworker-api.firebaseapp.com/` -> menu -> 
 ## Features
 
 Currently there is 4 different data collection methods:
-   * Static json
+   * Static json (In google charts format) examples in `src/assets`
    * Response time of an API
    * Size of an API body payload
    * Status code of API
