@@ -15,7 +15,7 @@
 
         <h3 >
           {{ item.title }}
-          <md-button v-on:click="deleteItem(item)" style="float:right">delete</md-button>
+          <md-button v-on:click="deleteItem(index)" style="float:right">delete</md-button>
         </h3>
         <button v-on:click="setVisualizationType(item, 'LineChart')">To Line</button>
         <button v-on:click="setVisualizationType(item, 'BarChart')">To Bar</button>
@@ -55,8 +55,8 @@ export default {
       item.x = x;
       item.y = y;
     },
-    deleteItem(item) {
-      this.$store.commit("deleteSet", item);
+    deleteItem(index) {
+      this.$store.commit("deleteSet", index);
     }
   }
 };

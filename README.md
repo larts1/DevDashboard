@@ -19,6 +19,7 @@ Currently there is 4 different data collection methods:
 
 To API ones you provide URL where browser sends the request. **NOTICE** That as all browser requests this can be stopped if request is blocked by your browsers CORS-check. To prevent this use service like `https://cors-anywhere.herokuapp.com/` (so instead of `www.google.fi`, use `https://cors-anywhere.herokuapp.com/google.fi` ). This however dosen't work in closed systems and in those you have to provide CORS-header or CORS-proxy your self.
 
+User can login with their google account or new create account, no email-verification needed. This login is only used to identify user for loading saved dashboard layout from other locations.
 ### Future features
 
 Plan is that user can provide own javascript file through UI which can perform more complicated requests. Currently this is only possible by addin fetcher to `src/Fetchers` and hosting this service yourself.

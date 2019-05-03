@@ -35,10 +35,7 @@ const store = new Vuex.Store({
     setVisualizationType(_state, { type, item }) {
       item.chartType = type;
     },
-    deleteSet(state, set) {
-      const index = state.dataSets.findIndex(
-        dset => set.x === dset.x && set.y === dset.y
-      );
+    deleteSet(state, index) {
       state.dataSets.splice(index, 1);
     }
   },
