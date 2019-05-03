@@ -37,7 +37,7 @@ const store = new Vuex.Store({
     },
     deleteSet(state, set) {
       const index = state.dataSets.findIndex(
-        dset => set.id == dset.id && self.x === dset.x && self.y === dset.y
+        dset => set.x === dset.x && set.y === dset.y
       );
       state.dataSets.splice(index, 1);
     }
