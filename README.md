@@ -1,8 +1,8 @@
-# serviceworkerapi
+# Serviceworkerapi
 
-## Description
+https://serviceworker-api.firebaseapp.com/ is service worker periodic sync powered dashboard. Mostly designed to monitor IoT devices in closed systems.
 
-https://serviceworker-api.firebaseapp.com/ is service worker periodic sync powered dashboard. Dashboard dosen't only stores chart positions and visualizations in cloud, all data is handled locally and therefore offline usage in closed system is possible.
+Dashboard dosen't only stores chart positions and visualizations in cloud, all data is handled locally and therefore offline usage in closed system is possible.
 
 Can be used to create fast and flexible dashboard, that contains any information that can be reached through clients browser. However project had major set back due https://developer.mozilla.org/en-US/docs/Web/API/SyncManager being set off the standardisation track, and not being supported by any major browser.
 
