@@ -37,7 +37,7 @@ const store = new Vuex.Store({
     },
     deleteSet(state, set) {
       const index = state.dataSets.findIndex(
-        dset => set.id == dset.id && self.x === dset.x
+        dset => set.id == dset.id && self.x === dset.x && self.y === dset.y
       );
       state.dataSets.splice(index, 1);
     }
@@ -53,20 +53,20 @@ const store = new Vuex.Store({
         entryFunction: type.entryFunction,
         topBar: false,
         chartOptions: {
-          height: type.height - 50,
-          width: "98%",
+          height: type.height - 80,
+          width: "96%",
           backgroundColor: "#424242",
-          legend: type.legend || 'right',
+          legend: "none",
           chartArea: {
-            width: '98%',
-            height: type.height - 50
-          },
+            width: "96%",
+            height: type.height - 80
+          }
         },
         options: type.options,
         x: type.x || 50,
         y: type.y || 150,
         height: type.width || "100",
-        width: type.height || "100",
+        width: type.height || "100"
       });
       setInterval(
         () =>
@@ -85,38 +85,19 @@ const store = new Vuex.Store({
         .where("user", "==", user)
         .get()).forEach(set => set.ref.delete());
       store.state.dataSets.forEach(async set => {
-        if (set.id == 0) {
-          const ref = await db.collection("datasets").add({
-            title: set.title,
-            x: set.x,
-            y: set.y,
-            user: user || "anon",
-            width: set.width,
-            height: set.height,
-            chartType: set.chartType,
-            options: set.options,
-            initData: set.initData,
-            legend: set.legend,
-            entryFunction: set.entryFunction || false
-          });
-          set.id = ref.id;
-        } else {
-          await db
-            .collection("datasets")
-            .doc(set.id)
-            .update({
-              title: set.title,
-              x: set.x,
-              y: set.y,
-              user: user || "anon",
-              width: set.width,
-              height: set.height,
-              chartType: set.chartType,
-              options: set.options,
-              legend: set.legend,
-              entryFunction: set.entryFunction || false
-            });
-        }
+        const ref = await db.collection("datasets").add({
+          title: set.title,
+          x: set.x,
+          y: set.y,
+          user: user || "anon",
+          width: set.width,
+          height: set.height,
+          visualizationType: set.chartType,
+          options: set.options,
+          initData: set.initData,
+          entryFunction: set.entryFunction || false
+        });
+        set.id = ref.id;
       });
     },
     async loadFromFirestore(context, { user }) {

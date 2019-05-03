@@ -1,1 +1,2 @@
-Functions are not actually used in the application. They are only called by the browser side by giving url 
+Functions are not actually used in the application. They are only called by the browser side by giving url.
+They can't be deployed without your own keys. 

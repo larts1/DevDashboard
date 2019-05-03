@@ -44,7 +44,8 @@ class AuthService {
 
     localStorage.setItem("loggedIn", true);
 
-    const parsed = jwt.decode(authResult.idToken, { complete: true });
+    //sub.verify through database rules and token header
+    const parsed = jwt.decode(authResult.idToken, { complete: true }); 
     this.sub = parsed.payload.sub;
     this.id = parsed.payload;
     localStorage.setItem("idToken", this.idToken);

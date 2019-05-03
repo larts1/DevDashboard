@@ -12,35 +12,28 @@
         <md-toolbar class="md-transparent" md-elevation="0">
           <span class="md-title">Account {{auth.id && auth.id.name || ''}}</span>
         </md-toolbar>
-        
 
         <md-button id="qsLoginBtn" class="md-raised" v-if="!authenticated" @click="login">Log In</md-button>
 
-        <md-button
-          id="qsLogoutBtn"
-          class="md-raised"
-          v-if="authenticated"
-          @click="logout"
-        >Log Out</md-button>
+        <md-button id="qsLogoutBtn" class="md-raised" v-if="authenticated" @click="logout">Log Out</md-button>
 
-        <md-button
-          id="qsSave"
-          class="md-raised"
-          v-if="authenticated"
-          @click="save"
-        >Save</md-button>
+        <md-button id="qsSave" class="md-raised" v-if="authenticated" @click="save">Save</md-button>
 
-        <md-button
-          id="qsLoad"
-          class="md-raised"
-          v-if="authenticated"
-          @click="load"
-        >Load</md-button>
+        <md-button id="qsLoad" class="md-raised" v-if="authenticated" @click="load">Load</md-button>
 
         <md-toolbar class="md-transparent" md-elevation="0">
           <span class="md-title">Add new dataset</span>
         </md-toolbar>
         <DataSetCreator :hideNavigation="hideNavigation"/>
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <span class="md-title">Demo scene</span>
+        </md-toolbar>
+          <br>
+          <md-button
+            id="qsLoad"
+            class="md-raised"
+            @click="$store.dispatch('loadFromFirestore', {user: 'auth0|5c75750cde5574341f0e2ffb'})"
+          >Load</md-button>
       </md-app-drawer>
       <md-app-content style="min-height: 100vh; margin-top: 64px;">
         <DataSets/>
@@ -104,7 +97,7 @@ export default {
 </script>
 
 <style>
-@import url('//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
+@import url("//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons");
 .md-app,
 #app {
   position: absolute;
